@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from musicApiApp.models import Genre
@@ -8,6 +9,7 @@ from musicApiApp.serializers import GenreSerializer
 class GenreView(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, genre_id=None, *args, **kwargs):
         retrieved_object = self.queryset.get(pk=genre_id)

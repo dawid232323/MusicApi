@@ -1,5 +1,6 @@
 from rest_framework import views, viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from musicApiApp.models import Album
 from musicApiApp.serializers import AlbumSerializer
@@ -8,6 +9,7 @@ from musicApiApp.serializers import AlbumSerializer
 class AlbumView(viewsets.ModelViewSet):
     serializer_class = AlbumSerializer
     queryset = Album.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, album_id=None, *args, **kwargs):
         retrieved_object = self.queryset.get(pk=album_id)

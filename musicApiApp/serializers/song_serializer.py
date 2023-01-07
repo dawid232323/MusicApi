@@ -11,4 +11,5 @@ class SongSerializer(serializers.ModelSerializer):
 
 class ReducedSongSerializer(SongSerializer):
     class Meta:
+        model = Song
         exclude = ('album', )

@@ -34,7 +34,8 @@ urlpatterns = [
         'get': 'list'
     })),
     path('albums/<int:album_id>', AlbumView.as_view({
-        'get': 'retrieve'
+        'get': 'retrieve',
+        'patch': 'update'
     })),
     path('genres', GenreView.as_view({
         'post': 'create',

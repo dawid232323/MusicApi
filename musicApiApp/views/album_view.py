@@ -25,8 +25,7 @@ class AlbumView(viewsets.ModelViewSet):
         try:
             serialised_object = callback_getter(album_id)
         except ObjectDoesNotExist:
-            return get_error_response(error_message='Album with given id does not exist',
-                                      response_status=status.HTTP_400_BAD_REQUEST)
+            return self._get_album_does_not_exist_response()
         return Response(serialised_object.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
@@ -46,6 +45,20 @@ class AlbumView(viewsets.ModelViewSet):
         serialized_body.save()
         return Response(serialized_body.data, status=status.HTTP_201_CREATED)
 
+    def update(self, request, album_id=None, *args, **kwargs):
+        if album_id is None:
+            return get_error_response(error_message='Album id should be specified',
+                                      response_status=status.HTTP_400_BAD_REQUEST)
+        request_body = request.data
+        try:
+            updated_object = self.queryset.get(pk=album_id)
+        except ObjectDoesNotExist:
+            return self._get_album_does_not_exist_response()
+        serialized_object = self.serializer_class(updated_object, data=request_body, partial=True)
+        serialized_object.is_valid(raise_exception=True)
+        serialized_object.save()
+        return Response(serialized_object.data, status=status.HTTP_200_OK)
+
     def _get_album_with_songs(self, album_id: int):
         album_with_details = self.queryset.prefetch_related('songs').get(pk=album_id)
         serialized_album = self.secondary_serializer_class(instance=album_with_details)
@@ -63,3 +76,7 @@ class AlbumView(viewsets.ModelViewSet):
 
     def _get_serialized_album_only_request(self, request_body) -> AlbumSerializer:
         return self.serializer_class(data=request_body)
+
+    def _get_album_does_not_exist_response(self):
+        return get_error_response(error_message='Album with given id does not exist',
+                                  response_status=status.HTTP_400_BAD_REQUEST)

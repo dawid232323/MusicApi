@@ -35,7 +35,8 @@ urlpatterns = [
     })),
     path('albums/<int:album_id>', AlbumView.as_view({
         'get': 'retrieve',
-        'patch': 'update'
+        'patch': 'update',
+        'delete': 'destroy'
     })),
     path('genres', GenreView.as_view({
         'get': 'list',

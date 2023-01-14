@@ -38,11 +38,12 @@ urlpatterns = [
         'patch': 'update'
     })),
     path('genres', GenreView.as_view({
-        'post': 'create',
-        'get': 'list'
+        'get': 'list',
+        'post': 'create'
     })),
     path('genres/<int:genre_id>', GenreView.as_view({
-        'get': 'retrieve'
+        'get': 'retrieve',
+        'put': 'update'
     })),
     path('songs', SongView.as_view({
         'get': 'list',

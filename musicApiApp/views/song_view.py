@@ -15,7 +15,7 @@ class SongView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
-        return Response(self.serializer_class(self.queryset, many=True), status=status.HTTP_200_OK)
+        return Response(self.serializer_class(self.queryset, many=True).data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, song_id=None, *args, **kwargs):
         try:

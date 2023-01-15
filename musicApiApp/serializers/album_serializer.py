@@ -1,13 +1,21 @@
 from .song_serializer import ReducedSongSerializer
 from rest_framework import serializers
 
-from musicApiApp.models import Album, Song
+from musicApiApp.models import Album, Song, Genre
 
 
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = '__all__'
+
+
+class DisplayAlbumSerializer(AlbumSerializer):
+    genre = serializers.ReadOnlyField(source='genre.name')
+
+
+class DisplaySongsAlbumSerializer(DisplayAlbumSerializer):
+    songs = ReducedSongSerializer(many=True)
 
 
 class AlbumSongsSerializer(AlbumSerializer):

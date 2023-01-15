@@ -6,13 +6,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from musicApiApp.models import Album
-from musicApiApp.serializers import AlbumSerializer, AlbumSongsSerializer
+from musicApiApp.serializers import AlbumSerializer, AlbumSongsSerializer, \
+    DisplayAlbumSerializer, DisplaySongsAlbumSerializer
 from musicApiApp.utils.error_utils import get_error_response
 
 
 class AlbumView(viewsets.ModelViewSet):
     serializer_class = AlbumSerializer
     secondary_serializer_class = AlbumSongsSerializer
+    display_serializer = DisplayAlbumSerializer
+    secondary_display_serializer = DisplaySongsAlbumSerializer
     queryset = Album.objects.all()
     permission_classes = (IsAuthenticated,)
 
@@ -73,22 +76,22 @@ class AlbumView(viewsets.ModelViewSet):
         album_to_delete.delete()
         return Response(status=status.HTTP_200_OK)
 
-    def _get_album_with_songs(self, album_id: int) -> AlbumSongsSerializer:
+    def _get_album_with_songs(self, album_id: int) -> DisplaySongsAlbumSerializer:
         album_with_details = self.queryset.prefetch_related(self.SONGS_RELATED_FIELD).get(pk=album_id)
-        serialized_album = self.secondary_serializer_class(instance=album_with_details)
+        serialized_album = self.secondary_display_serializer(instance=album_with_details)
         return serialized_album
 
-    def _get_serialised_albums_with_songs(self) -> AlbumSongsSerializer:
+    def _get_serialised_albums_with_songs(self) -> DisplaySongsAlbumSerializer:
         all_albums = self.queryset.prefetch_related(self.SONGS_RELATED_FIELD).all()
-        serialised_all_albums = self.secondary_serializer_class(all_albums, many=True)
+        serialised_all_albums = self.secondary_display_serializer(all_albums, many=True)
         return serialised_all_albums
 
     def _get_serialised_albums_only(self) -> AlbumSerializer:
-        return self.serializer_class(self.queryset, many=True)
+        return self.display_serializer(self.queryset, many=True)
 
     def _get_serialised_album_only(self, album_id: int) -> AlbumSerializer:
         album_only = self.queryset.get(pk=album_id)
-        return self.serializer_class(album_only)
+        return self.display_serializer(album_only)
 
     def _should_process_songs(self, query_params) -> bool:
         return query_params.get('songs') == 'True'

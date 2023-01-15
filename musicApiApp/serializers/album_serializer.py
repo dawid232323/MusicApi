@@ -12,6 +12,7 @@ class AlbumSerializer(serializers.ModelSerializer):
 
 class DisplayAlbumSerializer(AlbumSerializer):
     genre = serializers.ReadOnlyField(source='genre.name')
+    artist = serializers.ReadOnlyField(source='artist.name')
 
 
 class DisplaySongsAlbumSerializer(DisplayAlbumSerializer):
@@ -28,3 +29,11 @@ class AlbumSongsSerializer(AlbumSerializer):
         for single_song in songs:
             Song.objects.create(album=new_album, **single_song)
         return new_album
+
+
+class ReducedAlbumSerializer(AlbumSerializer):
+    class Meta:
+        model = Album
+        exclude = ('artist',)
+
+    genre = serializers.ReadOnlyField(source='genre.name')

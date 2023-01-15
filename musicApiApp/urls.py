@@ -3,7 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from musicApiApp.views import AlbumView, SongView, GenreView
+from musicApiApp.views import AlbumView, SongView, GenreView, ArtistView
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -51,6 +51,15 @@ urlpatterns = [
         'post': 'create'
     })),
     path('songs/<int:song_id>', SongView.as_view({
+        'get': 'retrieve',
+        'patch': 'update',
+        'delete': 'destroy'
+    })),
+    path('artists', ArtistView.as_view({
+        'get': 'list',
+        'post': 'create'
+    })),
+    path('artists/<int:artist_id>', ArtistView.as_view({
         'get': 'retrieve',
         'patch': 'update',
         'delete': 'destroy'

@@ -43,6 +43,14 @@ class GenreView(viewsets.ModelViewSet):
         serialized_object.save()
         return Response(serialized_object.data, status=status.HTTP_200_OK)
 
+    def destroy(self, request, genre_id=None, *args, **kwargs):
+        try:
+            genre_to_delete = self.queryset.get(pk=genre_id)
+        except ObjectDoesNotExist:
+            return self._get_genre_does_not_exist_response()
+        genre_to_delete.delete()
+        return Response(status=status.HTTP_200_OK)
+
     def _get_genre_does_not_exist_response(self):
         return get_error_response(error_message='Genre with given id does not exist',
                                        response_status=status.HTTP_400_BAD_REQUEST)

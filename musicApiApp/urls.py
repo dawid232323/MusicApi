@@ -44,7 +44,8 @@ urlpatterns = [
     })),
     path('genres/<int:genre_id>', GenreView.as_view({
         'get': 'retrieve',
-        'put': 'update'
+        'put': 'update',
+        'delete': 'destroy'
     })),
     path('songs', SongView.as_view({
         'get': 'list',

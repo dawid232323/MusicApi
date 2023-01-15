@@ -33,7 +33,7 @@ class AlbumView(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         should_show_songs = self._should_process_songs(request.query_params)
-        get_albums_callback = Callable([], AlbumSerializer)
+        get_albums_callback: Callable([], AlbumSerializer)
         if should_show_songs:
             get_albums_callback = self._get_serialised_albums_with_songs
         else:
@@ -55,9 +55,6 @@ class AlbumView(viewsets.ModelViewSet):
         return Response(serialized_body.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, album_id=None, *args, **kwargs):
-        if album_id is None:
-            return get_error_response(error_message='Album id should be specified',
-                                      response_status=status.HTTP_400_BAD_REQUEST)
         request_body = request.data
         try:
             updated_object = self.queryset.get(pk=album_id)

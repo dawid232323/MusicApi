@@ -9,11 +9,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 swagger_schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="Music API",
       default_version='v1',
-      description="Test description",
+      description="RestApi for storing music data",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
+      contact=openapi.Contact(email="dawpylak@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
